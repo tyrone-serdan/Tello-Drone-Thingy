@@ -1,7 +1,7 @@
-from logging import debug
+import importlib.util as iUtil
 from djitellopy import Tello
 from glob import glob
-import importlib.util as iUtil
+from time import sleep
 
 drone = Tello()
 actionsToLoad = glob('Actions/*.py')
@@ -10,14 +10,24 @@ actionsLoaded = dict()
 def takeUserInput():
     uInput = input("Type y to activate debug mode, n if not needed. ")
     debug = 1 if uInput.lower() == "y" else 0
+    connectDrone(debug)
     
     while True:
-        uInput = input("Input action for tello drone. ")
+        uInput = input("Input action for Tello Drone. \n")
         
         if (uInput.lower() == "exit"):
+            if (drone.is_flying == True):
+                drone.land()
             quit()
         
         doAction(uInput, debug)
+
+def connectDrone(mode: int):
+    if (mode == 0):
+        drone.connect()
+    else:
+        pass
+        
     
 def doAction(action: str, debugMode: int):
     if (debugMode == 0):
@@ -37,6 +47,8 @@ def loadActions():
         
         # Allows us to call the Action safely
         actionsLoaded[actionKey] = action.action
+
+    print(f"Loaded actions: {list(actionsLoaded.keys())}")
         
 
 

@@ -15,7 +15,7 @@ class Action:
         Prints out a statement saying function was successfully called instead of running code
         intended for the function. Useful for debugging.
         """
-        commandName = self.name.capitalize()
+        commandName = self.name.upper()
         print(f"\nThe function {commandName} has been successfully called.\n")
         
     

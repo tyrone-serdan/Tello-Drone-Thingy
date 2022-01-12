@@ -1,10 +1,10 @@
 from Structures.action import Action
-from djitellopy import Tello as t
+from djitellopy import Tello as drone
 from time import sleep
 
 def testFlight():
-    t.takeoff()
+    drone.takeoff()
     sleep(0.5)
-    t.land()
+    drone.land()
     
 action = Action(testFlight)
