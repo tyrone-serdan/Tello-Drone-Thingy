@@ -1,6 +1,3 @@
-import typing_extensions
-
-
 """
 Actions are a way to avoid adding if else statements for handling debugMode = on and debugMode = off on the drone.
 """
@@ -19,6 +16,6 @@ class Action:
         intended for the function. Useful for debugging.
         """
         commandName = self.name.capitalize()
-        print(f"The function {commandName} has been successfully called.")
+        print(f"\nThe function {commandName} has been successfully called.\n")
         
     
