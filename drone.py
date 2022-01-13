@@ -4,8 +4,8 @@ from glob import glob
 from time import sleep
 
 drone = Tello()
-actionsToLoad = glob('Actions/*.py')
 actionsLoaded = dict()
+activeActions = list()
 
 def takeUserInput():
     uInput = input("Type y to activate debug mode, n if not needed. ")
@@ -19,7 +19,10 @@ def takeUserInput():
             if (drone.is_flying == True):
                 drone.land()
             quit()
-        
+        elif (uInput.lower() == "list"):
+            print(activeActions)
+            pass
+            
         doAction(uInput, debug)
 
 def connectDrone(mode: int):
@@ -29,13 +32,20 @@ def connectDrone(mode: int):
         pass
         
     
-def doAction(action: str, debugMode: int):
-    if (debugMode == 0):
-        actionsLoaded.get(action).command()
+def doAction(actionSelected: str, debugMode: int):
+    foundAction = actionSelected in activeActions
+    
+    if (foundAction == False):
+        return
+    
+    if (debugMode == 0 and foundAction == True):
+        actionsLoaded.get(actionSelected).command()
     else:
-        actionsLoaded.get(action).debugStatement()
+        actionsLoaded.get(actionSelected).debugStatement()
 
 def loadActions():
+    actionsToLoad = glob('Actions/*.py')
+    
     for actionPath in actionsToLoad:
         actionName = actionPath.replace("Actions" + '\\', "")
         actionKey = actionName.replace(".py", "")
@@ -45,11 +55,11 @@ def loadActions():
         action = iUtil.module_from_spec(spec)
         spec.loader.exec_module(action)
         
+        # This is to have a list ready for the user to see the available actions for our Drone.
+        activeActions.append(actionKey)
+        
         # Allows us to call the Action safely
         actionsLoaded[actionKey] = action.action
-
-    print(f"Loaded actions: {list(actionsLoaded.keys())}")
-        
 
 
 loadActions()
