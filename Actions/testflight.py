@@ -1,5 +1,5 @@
 from Structures.action import Action
-from djitellopy import Tello as drone
+from drone import drone
 from time import sleep
 
 def testFlight():
